@@ -1,14 +1,18 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:guin/BoatDetails/Model/nav_details.dart';
+
+
 import 'package:guin/BoatDetails/Widgets/widget/battery_box.dart';
 import 'package:guin/BoatDetails/Widgets/widget/boat_location.dart';
 import 'package:guin/BoatDetails/Widgets/widget/current_status.dart';
 import 'package:guin/BoatDetails/Widgets/widget/speed_meter.dart';
 import 'package:guin/BoatDetails/Widgets/widget/weather.dart';
+import 'package:guin/Home/Controller/boatDetailsModel2.dart';
+import 'package:guin/Home/Controller/homeController.dart';
 import 'package:guin/Home/Model/all_boat_data.dart';
 import 'package:guin/constants/app_image.dart';
 import 'package:guin/constants/app_text.dart';
@@ -19,7 +23,7 @@ class DesktopBody extends StatefulWidget {
   final double latitude;
   final double longitude;
   final Data navmodel;
-  final List<NavBoatDetailsModel>? snapshotData;
+  final List<NavBoatDetailsModel2>? snapshotData;
 
   const DesktopBody({
     Key? key,
@@ -37,7 +41,7 @@ class _DesktopBodyState extends State<DesktopBody> {
   @override
   Widget build(BuildContext context) {
     LatLng boatLatLng = LatLng(widget.latitude, widget.longitude);
-
+    final controller = Get.find<NetworkController>();
     return Scaffold(
       body: Row(
         children: [
@@ -107,7 +111,7 @@ class _DesktopBodyState extends State<DesktopBody> {
                             children: [
                               const Text("Range",
                                   style: TextStyle(fontSize: 10)),
-                              Text("${Range.range} km",
+                              Text("${controller.boatDetails[0].range} km",
                                   style: const TextStyle(fontSize: 11)),
                             ],
                           ),
@@ -167,9 +171,9 @@ class _DesktopBodyState extends State<DesktopBody> {
               padding: const EdgeInsets.all(8.0),
               child: BatteryListData(
                 snapshotData: widget.snapshotData ?? [],
-                bBox1: widget.snapshotData?[0].bBox1,
-                bBox2: widget.snapshotData?.length == 2
-                    ? widget.snapshotData![1].bBox2
+                bBox1: controller.boatDetails[0].data[0],
+                bBox2: controller.boatDetails.length == 2
+                    ? controller.boatDetails[0].data[1]
                     : null,
               ),
             ),
@@ -191,10 +195,6 @@ class _DesktopBodyState extends State<DesktopBody> {
       child: Padding(
         padding: const EdgeInsets.all(5.0),
         child: CurrentStatus(
-          model: widget.navmodel,
-          bBox1: widget.snapshotData![0].bBox1!,
-          bBox2: hasTwoBatteries ? widget.snapshotData![1].bBox2! : null,
-          batteryBoxCount: hasTwoBatteries ? 2 : 1,
         ),
       ),
     );

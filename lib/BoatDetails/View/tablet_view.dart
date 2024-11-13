@@ -1,14 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:guin/BoatDetails/Model/nav_details.dart';
+
 import 'package:guin/BoatDetails/Widgets/widget/battery_box.dart';
 import 'package:guin/BoatDetails/Widgets/widget/boat_location.dart';
 import 'package:guin/BoatDetails/Widgets/widget/current_status.dart';
 import 'package:guin/BoatDetails/Widgets/widget/speed_meter.dart';
 import 'package:guin/BoatDetails/Widgets/widget/weather.dart';
+import 'package:guin/Home/Controller/boatDetailsModel2.dart';
+import 'package:guin/Home/Controller/homeController.dart';
 import 'package:guin/Home/Model/all_boat_data.dart';
 import 'package:guin/constants/app_image.dart';
 import 'package:guin/constants/app_text.dart';
@@ -16,12 +19,11 @@ import 'package:guin/constants/constant_values.dart';
 import 'package:guin/constants/constants.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-
 class TabletBody extends StatefulWidget {
   final double latitude;
   final double longitude;
   final Data navmodel;
-  final List<NavBoatDetailsModel>? snapshotData;
+  final List<NavBoatDetailsModel2>? snapshotData;
   const TabletBody({
     super.key,
     required this.navmodel,
@@ -38,7 +40,7 @@ class _TabletBodyState extends State<TabletBody> {
   @override
   Widget build(BuildContext context) {
     LatLng boatLatLng = LatLng(widget.latitude, widget.longitude);
-
+    final controller = Get.find<NetworkController>();
     return Scaffold(
       body: ListView(
         scrollDirection: Axis.vertical,
@@ -133,7 +135,7 @@ class _TabletBodyState extends State<TabletBody> {
                                           style: TextStyle(fontSize: 10),
                                         ),
                                         Text(
-                                          "${Range.range} km",
+                                          "${controller.boatDetails[0].range} km",
                                           style: const TextStyle(fontSize: 11),
                                         )
                                       ],
@@ -199,11 +201,12 @@ class _TabletBodyState extends State<TabletBody> {
                     child: widget.snapshotData!.length == 2
                         ? BatteryListData(
                             snapshotData: widget.snapshotData,
-                            bBox1: widget.snapshotData![0].bBox1,
-                            bBox2: widget.snapshotData![1].bBox2,
+                            bBox1: controller.boatDetails[0].data[0],
+                            bBox2: controller.boatDetails[1].data[1],
                           )
                         : BatteryListData(
-                            bBox1: widget.snapshotData![0].bBox1, snapshotData: [],
+                            bBox1: controller.boatDetails[0].data[1],
+                            snapshotData: [],
                           ),
                   ),
                 ),
@@ -230,10 +233,6 @@ class _TabletBodyState extends State<TabletBody> {
                             ),
                           ),
                           child: CurrentStatus(
-                            model: widget.navmodel,
-                            bBox1: widget.snapshotData![0].bBox1!,
-                            bBox2: widget.snapshotData![1].bBox2!,
-                            batteryBoxCount: 2,
                           ),
                         ),
                       )
@@ -249,9 +248,6 @@ class _TabletBodyState extends State<TabletBody> {
                           ),
                         ),
                         child: CurrentStatus(
-                          model: widget.navmodel,
-                          bBox1: widget.snapshotData![0].bBox1!,
-                          batteryBoxCount: 1,
                         ),
                       ),
                 const SizedBox(

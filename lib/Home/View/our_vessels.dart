@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:guin/Home/Controller/homeController.dart';
-import 'package:guin/Home/View/Widget/activity_details_card.dart';
+
 import 'package:guin/Home/View/Widget/boat_card.dart';
-import 'package:guin/Home/View/Widget/custom_card.dart';
-import 'package:guin/constants/constants.dart';
+
 import 'package:guin/constants/responsive.dart';
-import 'package:shimmer/shimmer.dart';
 
 class OurVesselPage extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -33,7 +31,7 @@ class OurVesselPage extends StatelessWidget {
                   const SizedBox(height: 70),
                   Center(
                     child: Text(
-                      'Our Vessels',
+                      'Boat List',
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
@@ -82,7 +80,7 @@ class OurVesselPage extends StatelessWidget {
                   // }),
                   const SizedBox(height: 20),
                   Obx(() {
-                    if (networkController.isLoading.value) {
+                    if (networkController.isBoatdataLoading.value) {
                       return const Center(
                         child: SizedBox(
                           height: 155,
@@ -94,7 +92,7 @@ class OurVesselPage extends StatelessWidget {
                       );
                     } else if (networkController.navModel.isEmpty) {
                       return const Center(
-                        child: Text("No boat data available"),
+                        child: Text("No available"),
                       );
                     }
                     return GridView.builder(
@@ -112,6 +110,7 @@ class OurVesselPage extends StatelessWidget {
                         final modelData = networkController.navModel[index];
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5),
+                          
                           child: BoatCard(modelData: modelData.data!),
                         );
                       },

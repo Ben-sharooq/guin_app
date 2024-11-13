@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:guin/Home/Controller/homeController.dart';
@@ -21,14 +21,14 @@ class WeatherCard extends StatelessWidget {
     // Instantiate the controller
     final weatherController = Get.find<NetworkController>();
     weatherController.getWeatherTemp(latitude,longitude);
-
+// Make a seperate loading state for it #weather
     return Obx(() {
-      if (weatherController.isLoading.value) {
+      if (weatherController.isBoatdataLoading.value) {
         return const Center(child: CircularProgressIndicator());
       } else if (weatherController.errorMessage.isNotEmpty) {
         return Center(child: Text(weatherController.errorMessage.value));
       } else if (weatherController.weatherTemp.value != null) {
-        final condition = weatherController.weatherTemp.value.weather![0].id;
+        final condition = weatherController.weatherTemp.value.weather?[0].id;
         final weatherIcon = getWeatherIcon(condition!);
 
         return Column(
@@ -38,12 +38,12 @@ class WeatherCard extends StatelessWidget {
             Row(children: [
               const Icon(Icons.location_on),
               Text(
-                "${weatherController.weatherTemp.value.name}, ${weatherController.weatherTemp.value.sys!.country}",
+                "${weatherController.weatherTemp.value.name ?? 'unknown'}, ${weatherController.weatherTemp.value.sys!.country ?? ''}",
               ),
             ]),
             weatherIcon,
             Text(
-              "${weatherController.weatherTemp.value.main!.temp!.round()}°C",
+              "${weatherController.weatherTemp.value.main!.temp!.round() ?? '--'}°C",
               style: const TextStyle(fontSize: 45, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 29),
@@ -52,16 +52,13 @@ class WeatherCard extends StatelessWidget {
               children: [
                 WeatherItem(
                   text: 'Wind Speed',
-                  value: weatherController.weatherTemp.value.wind!.speed!
-                      .round()
-                      .toString(),
+                  value: weatherController.weatherTemp.value.wind?.speed?.round()?.toString() ??'--',   
                   unit: 'km/h',
                   imageUrl: AppImage.windSpeed,
                 ),
                 WeatherItem(
                   text: 'Humidity',
-                  value: weatherController.weatherTemp.value.main!.humidity
-                      .toString(),
+                  value: weatherController.weatherTemp.value.main?.humidity?.toString() ??'--',
                   unit: 'bar',
                   imageUrl: AppImage.humidity,
                 ),

@@ -71,7 +71,7 @@ class _MenuState extends State<Menu> {
                       Get.to(OurVesselPage(scaffoldKey: GlobalKey(),));
                     }
                     if (selected == 2) {
-                      Get.off(LoginPage());
+                      Get.off(()=>const LoginPage());
                     }
                     widget.scaffoldKey.currentState!.closeDrawer();
                   },

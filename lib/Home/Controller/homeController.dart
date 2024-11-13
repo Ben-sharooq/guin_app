@@ -2,8 +2,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:guin/BoatDetails/Model/model.dart';
-import 'package:guin/BoatDetails/Model/nav_boatdetail_request.dart';
+import 'package:guin/Home/Controller/boatDetailsModel2.dart';
 import 'package:guin/Home/Model/alert_model.dart';
 import 'package:guin/Home/Model/all_boat_data.dart';
 import 'package:guin/Home/Model/co2model.dart';
@@ -22,9 +21,15 @@ class NetworkController extends GetxController {
   var selectedIndex = 0.obs;
   var toggleIndex = 0.obs;
   var weatherTemp = WeatherTemp().obs;
+  var co2ChartData = <Datum>[].obs;
+  var tressChartData = <Datum>[].obs;
+  var dieselChartData = <Datum>[].obs;
 
-  var isLoading = true.obs; // General loading state
-  var isLoading1 = true.obs; // Specific loading state for CO2/Trees data
+  var isBoatdataLoading = true.obs; // General loading state
+  var isco2dataLoading = true.obs; // Specific loading state for CO2/Trees data
+  var isAlertLoading = true.obs;
+  var isweatherLoading = true.obs;
+  var isPeriodwiseLoading = false.obs;
   var errorMessage = ''.obs; // Error message holder
 
   @override
@@ -33,6 +38,7 @@ class NetworkController extends GetxController {
     getAllBoatData();
     getTotalCo2TressData();
     fetchAlerts();
+    
     getDateWiseCo2TreesData(0);
   }
 
@@ -43,8 +49,8 @@ class NetworkController extends GetxController {
 
   // Fetch all boat data
   Future<void> getAllBoatData() async {
-    isLoading.value = true;
-    final url = "${ConstantText.baseUrl}/api/v1/boats";
+    isBoatdataLoading.value = true;
+    const url = "${ConstantText.baseUrl}/api/v1/boats";
 
     try {
       var response =
@@ -61,41 +67,83 @@ class NetworkController extends GetxController {
     } catch (e) {
       errorMessage.value = 'Error in getAllBoatData: $e';
     } finally {
-      isLoading.value = false;
+      isBoatdataLoading.value = false;
     }
   }
 
-  var boatDetails = <BoatData1>[].obs;
-  // Fetch specific boat details
-  Future<void> fetchBoatDetails(NavBoatDetailsRequest request) async {
-    final url = "${ConstantText.baseUrl}/api/v1/data";
-
+  var boatDetails = <NavBoatDetailsModel2>[].obs;
+  Future<void> fetchBoatDetails(Data request) async {
+    const url = "${ConstantText.baseUrl}/api/v1/data";
+    print(request);
     try {
-      if (kDebugMode) print('Request Payload: ${request.toJson()}');
+      var data = {
+        "name": request.name,
+        "b_box": request.bBox,
+        "b_box_1_name": request.bBox1Name,
+        "b_box_1_value": request.bBox1Value,
+        "eb": request.eb,
+        "id": request.id,
+        "b_box_2_name": request.bBox2Name,
+        "b_box_2_value": request.bBox2Value,
+        "total_run_hrs": request.totalRunHrs,
+        "url": request.url,
+        "boat_status": request.boatStatus,
+        "tl_diesel_consumed": request.tlDieselConsumed,
+        "total_carbon_emission": request.totalCarbonEmission,
+        "trees_planted": request.treesPlanted
+      };
 
       var response = await _dio.post(
         url,
         options: Options(headers: getHeaders()),
-        data: request.toJson(),
+        data: data,
       );
 
       if (response.statusCode == 200) {
-        var data = response.data;
-        log('Response Data:${data}');
+        var dataList = response.data[0]['data'] as List;
+        var rangeInfo = response.data[1]['range'];
 
-        // Parse the response to a list of data entries
-        var boatDataList = (data['data'] as List).map((item) {
-          var bBoxData = item as Map<String, dynamic>;
-          return bBoxData
-              .map((key, value) => MapEntry(key, parseBatteryBox(value)));
+        // Check if dataList is populated
+        if (dataList.isEmpty) {
+          errorMessage.value = 'Data list is empty';
+          print('Error: dataList is empty');
+          return;
+        }
+
+        // Parse BatteryBox items
+        var boatDataList = dataList.map((item) {
+          var bBoxData = item.values.first as Map<String, dynamic>;
+          return BatteryBox.fromJson(bBoxData); // Make sure fromJson exists
         }).toList();
-        boatDetails.value = (response.data['data'] as List)
-            .map((item) => BoatData1.fromJson(item))
-            .toList();
-        // Store or use `boatDataList` as needed in the controller
-        log('Parsed Boat Data: $boatDataList');
+
+        // Parse rangeInfo to Range1 model
+        var range = Range1.fromJson(rangeInfo);
+
+        // Check if parsing was successful
+        if (boatDataList.isEmpty || range == null) {
+          errorMessage.value = 'Failed to parse boat data or range information';
+          print('Error: Failed to parse boat data or range information');
+          return;
+        }
+
+        // Assign parsed data to boatDetails list
+        boatDetails.value = [
+          NavBoatDetailsModel2(data: boatDataList, range: range)
+        ];
+
+        // Logging to confirm parsed values
+        log('Parsed Boat Data List: $boatDataList');
+        log('Parsed Range: $range');
+
+        if (boatDetails.isNotEmpty && boatDetails[0].data.isNotEmpty) {
+          log('${boatDetails[0].data[0]}');
+          if (boatDetails[0].data.length > 1) {
+            log('${boatDetails[0].data[1]}');
+          }
+        }
       } else {
         errorMessage.value = 'Failed to load boat details';
+        print('Error: Failed to load boat details');
       }
     } catch (e) {
       if (kDebugMode) print('Error fetching boat details: $e');
@@ -119,8 +167,8 @@ class NetworkController extends GetxController {
 
   // Fetch total CO2 and Trees Data
   Future<void> getTotalCo2TressData() async {
-    isLoading1.value = true;
-    final url =
+    isco2dataLoading.value = true;
+    const url =
         "${ConstantText.baseUrl}/api/v1/total_carbonemission_treesplanted_diesel";
 
     try {
@@ -136,13 +184,14 @@ class NetworkController extends GetxController {
     } catch (e) {
       errorMessage.value = 'Error in getTotalCo2TressData: $e';
     } finally {
-      isLoading1.value = false;
+      isco2dataLoading.value = false;
     }
   }
 
   // Fetch alerts
   Future<void> fetchAlerts() async {
-    final url = '${ConstantText.baseUrl}/api/v1/alert';
+    isAlertLoading.value = true;
+    const url = '${ConstantText.baseUrl}/api/v1/alert';
 
     try {
       var response =
@@ -158,11 +207,14 @@ class NetworkController extends GetxController {
       }
     } catch (e) {
       errorMessage.value = 'Error fetching alerts: $e';
+    } finally {
+      isAlertLoading.value = false;
     }
   }
 
   // Fetch weather data based on latitude and longitude
   Future<WeatherTemp?> getWeatherTemp(double lat, double long) async {
+    isweatherLoading.value = true;
     final url = "https://api.openweathermap.org/data/2.5/weather"
         "?lat=$lat&lon=$long&units=metric&appid=${ConstantText.openWeatherApiToken}";
 
@@ -175,6 +227,8 @@ class NetworkController extends GetxController {
       }
     } catch (e) {
       errorMessage.value = 'Error fetching weather data: $e';
+    } finally {
+      isweatherLoading.value = false;
     }
     return null;
   }
@@ -182,6 +236,7 @@ class NetworkController extends GetxController {
   // Fetch date-wise CO2 and Trees data
   Future<TotalCo2TressPeriodWiseModel?> getDateWiseCo2TreesData(
       int index) async {
+    isPeriodwiseLoading.value = true;
     final url = "${ConstantText.baseUrl}/api/v1/total_carbonemission_graph"
         "?input_param=${AppText.labels![index]}";
 
@@ -196,6 +251,8 @@ class NetworkController extends GetxController {
       if (kDebugMode) {
         print('Error in getDateWiseCo2TreesData: $e');
       }
+    } finally {
+      isPeriodwiseLoading.value = false;
     }
     return null;
   }

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 TotalCo2TressPeriodWiseModel totalCo2TressPeriodWiseModelFromJson(String str) =>
@@ -10,9 +9,7 @@ String totalCo2TressPeriodWiseModelToJson(TotalCo2TressPeriodWiseModel data) =>
 class TotalCo2TressPeriodWiseModel {
   List<Datum>? data;
 
-  TotalCo2TressPeriodWiseModel({
-    this.data,
-  });
+  TotalCo2TressPeriodWiseModel({this.data});
 
   factory TotalCo2TressPeriodWiseModel.fromJson(Map<String, dynamic> json) =>
       TotalCo2TressPeriodWiseModel(
@@ -39,7 +36,6 @@ class Datum {
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         reportDatetime: json["report_datetime"],
-        // reportDatetime: DateTime.parse(json["report_datetime"]),
         totalCarbonEmission: json["total_carbon_emission"].toDouble(),
         tlDieselConsumed: json["tl_diesel_consumed"].toDouble(),
         tressPlanted: json["tress_planted"].toDouble(),
@@ -47,9 +43,9 @@ class Datum {
 
   Map<String, dynamic> toJson() => {
         "report_datetime": reportDatetime,
-        // "report_datetime": reportDatetime!.toIso8601String(),
         "total_carbon_emission": totalCarbonEmission,
         "tl_diesel_consumed": tlDieselConsumed,
         "tress_planted": tressPlanted,
       };
 }
+

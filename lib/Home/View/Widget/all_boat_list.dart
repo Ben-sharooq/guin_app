@@ -6,14 +6,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:guin/BoatDetails/Model/nav_boatdetail_request.dart';
+
 import 'package:guin/BoatDetails/View/DetailsScreen/NavDetailsScreen.dart';
 import 'package:guin/Home/Model/all_boat_data.dart';
 import 'package:guin/Home/Model/total_co2_trees.dart';
-import 'package:guin/Home/View/Widget/boat_card.dart';
-import 'package:guin/constants/app_functions.dart';
-import 'package:guin/constants/app_text.dart';
-import 'package:guin/constants/constant_values.dart';
+
 import 'package:guin/constants/responsive.dart';
 
 class AllBoatListWidget extends StatelessWidget {
@@ -29,7 +26,7 @@ class AllBoatListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.75,
-      width: MediaQuery.of(context).size.width * 0.70,
+      
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: Responsive.isMobile(context) ? 1 : 2,
@@ -43,8 +40,8 @@ class AllBoatListWidget extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-              //     Get.to(NavBoatDetailsScreen(
-              // boatDetailsRequest: NavBoatDetailsRequest(), modelData: navModelData[index]));
+              Get.to(
+                  () => NavBoatDetailsScreen(modelData: navModelData[index]!.data!));
             },
             child: Expanded(
               child: SizedBox(
@@ -63,8 +60,8 @@ class AllBoatListWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             CachedNetworkImage(
-                              imageUrl:
-                                  "${ConstantText.baseUrl}${navModelData[index]!.data!.url!}",
+                              imageUrl: navModelData[index]?.data?.url ?? '',
+                              // "${ConstantText.baseUrl}${navModelData[index]!.data!.url!}",
                               height: 50,
                               width: 80,
                               placeholder: (context, url) => const Center(

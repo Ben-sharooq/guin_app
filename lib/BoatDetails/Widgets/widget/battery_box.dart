@@ -1,17 +1,19 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:guin/BoatDetails/Model/nav_details.dart';
-import 'package:guin/constants/constant_values.dart';
+
+import 'package:guin/Home/Controller/boatDetailsModel2.dart';
+
 import 'package:guin/constants/constants.dart';
 import 'package:guin/constants/responsive.dart';
 
-
-
 class BatteryListData extends StatefulWidget {
-  final List<NavBoatDetailsModel>? snapshotData;
+  final List<NavBoatDetailsModel2>? snapshotData;
 
-  final BBox? bBox1;
-  final BBox? bBox2;
+  final BatteryBox? bBox1;
+  final BatteryBox? bBox2;
   const BatteryListData({
     Key? key,
     required this.snapshotData,
@@ -28,70 +30,92 @@ class BatteryListData extends StatefulWidget {
 class _BatteryListDataState extends State<BatteryListData> {
   List<NavBatteryBoxDetails> navBatteryBoxDetails = <NavBatteryBoxDetails>[];
 
+ 
   @override
   void initState() {
-    // final BBox bBox1 = widget.widget. bBox1!;
-    // final BBox bBox2 = widget.snapshotData![1].widget. bBox2!;
+    super.initState();
+
+    // Print the values of bBox1 and bBox2 to the console
+    if (kDebugMode) {
+      print('bBox1: ${widget.bBox1 ?? "No data"}');
+    }
+    if (kDebugMode) {
+      print('bBox2: ${widget.bBox2 ?? "No data"}');
+    }
+
+    // Initialize navBatteryBoxDetails with data from bBox1 and bBox2, with fallback values if null.
     navBatteryBoxDetails = <NavBatteryBoxDetails>[
       NavBatteryBoxDetails(
         title: "",
-        bBox1: ConstantText.batteryBox1,
-        bBox2: ConstantText.batteryBox2,
+        bBox1: widget.bBox1?.toString() ?? "No data",  // Handle null for bBox1
+        bBox2: widget.bBox2?.toString() ?? "No data",  // Handle null for bBox2
       ),
       NavBatteryBoxDetails(
-          title: "Pack current",
-          bBox1: widget.bBox1!.packCurrent.toString(),
-          bBox2: widget.bBox2?.packCurrent.toString()),
+        title: "Pack current",
+        bBox1: widget.bBox1?.packCurrent.toString() ?? "N/A",  // Fallback for packCurrent
+        bBox2: widget.bBox2?.packCurrent.toString() ?? "N/A",  // Fallback for packCurrent
+      ),
       NavBatteryBoxDetails(
-          title: "SOC",
-          bBox1: widget.bBox1!.sOC.toString(),
-          bBox2: widget.bBox2?.sOC.toString()),
+        title: "SOC",
+        bBox1: widget.bBox1?.soc.toString() ?? "No data",  // Handle null for SOC
+        bBox2: widget.bBox2?.soc.toString() ?? "No data",  // Handle null for SOC
+      ),
       NavBatteryBoxDetails(
-          title: "Max cell voltage",
-          bBox1: widget.bBox1!.maxCellVoltage.toString(),
-          bBox2: widget.bBox2?.maxCellVoltage.toString()),
+        title: "Max cell voltage",
+        bBox1: widget.bBox1?.maxCellVoltage.toString() ?? "No data",
+        bBox2: widget.bBox2?.maxCellVoltage.toString() ?? "No data",
+      ),
       NavBatteryBoxDetails(
-          title: "Min cell voltage",
-          bBox1: widget.bBox1!.minCellVoltage.toString(),
-          bBox2: widget.bBox2?.minCellVoltage.toString()),
+        title: "Min cell voltage",
+        bBox1: widget.bBox1?.minCellVoltage.toString() ?? "No data",
+        bBox2: widget.bBox2?.minCellVoltage.toString() ?? "No data",
+      ),
       NavBatteryBoxDetails(
-          title: "CMU Vmax cell",
-          bBox1: widget.bBox1!.cMUVmaxCell.toString(),
-          bBox2: widget.bBox2?.cMUVmaxCell.toString()),
+        title: "CMU Vmax cell",
+        bBox1: widget.bBox1?.cmuVmaxCell.toString() ?? "No data",
+        bBox2: widget.bBox2?.cmuVmaxCell.toString() ?? "No data",
+      ),
       NavBatteryBoxDetails(
-          title: "CMU Vmin cell",
-          bBox1: widget.bBox1!.cMUVminCell.toString(),
-          bBox2: widget.bBox2?.cMUVminCell.toString()),
+        title: "CMU Vmin cell",
+        bBox1: widget.bBox1?.cmuVminCell.toString() ?? "No data",
+        bBox2: widget.bBox2?.cmuVminCell.toString() ?? "No data",
+      ),
       NavBatteryBoxDetails(
-          title: "Min cell temp",
-          bBox1: widget.bBox1!.minCellTempCMU.toString(),
-          bBox2: widget.bBox2?.minCellTempCMU.toString()),
+        title: "Min cell temp",
+        bBox1: widget.bBox1?.minCellTempCMU.toString() ?? "No data",
+        bBox2: widget.bBox2?.minCellTempCMU.toString() ?? "No data",
+      ),
       NavBatteryBoxDetails(
-          title: "Max cell temp",
-          bBox1: widget.bBox1!.maxCellTempCMU.toString(),
-          bBox2: widget.bBox2?.maxCellTempCMU.toString()),
+        title: "Max cell temp",
+        bBox1: widget.bBox1?.maxCellTempCMU.toString() ?? "No data",
+        bBox2: widget.bBox2?.maxCellTempCMU.toString() ?? "No data",
+      ),
       NavBatteryBoxDetails(
-          title: "Speed",
-          bBox1: widget.bBox1!.speed.toString(),
-          bBox2: widget.bBox2?.speed.toString()),
+        title: "Speed",
+        bBox1: widget.bBox1?.speed.toString() ?? "No data",
+        bBox2: widget.bBox2?.speed.toString() ?? "No data",
+      ),
       NavBatteryBoxDetails(
-          title: "Max cell(V) no",
-          bBox1: widget.bBox1!.maxCellVoltageNo.toString(),
-          bBox2: widget.bBox2?.maxCellVoltageNo.toString()),
+        title: "Max cell(V) no",
+        bBox1: widget.bBox1?.maxCellVoltageNo.toString() ?? "No data",
+        bBox2: widget.bBox2?.maxCellVoltageNo.toString() ?? "No data",
+      ),
       NavBatteryBoxDetails(
-          title: "Min cell(V) no",
-          bBox1: widget.bBox1!.minCellVoltageNo.toString(),
-          bBox2: widget.bBox2?.minCellVoltageNo.toString()),
+        title: "Min cell(V) no",
+        bBox1: widget.bBox1?.minCellVoltageNo.toString() ?? "No data",
+        bBox2: widget.bBox2?.minCellVoltageNo.toString() ?? "No data",
+      ),
       NavBatteryBoxDetails(
-          title: "Pack voltage",
-          bBox1: widget.bBox1!.packVoltage.toString(),
-          bBox2: widget.bBox2?.packVoltage.toString()),
+        title: "Pack voltage",
+        bBox1: widget.bBox1?.packVoltage.toString() ?? "No data",
+        bBox2: widget.bBox2?.packVoltage.toString() ?? "No data",
+      ),
       NavBatteryBoxDetails(
-          title: "SOH",
-          bBox1: widget.bBox1!.sOH.toString(),
-          bBox2: widget.bBox2?.sOH.toString()),
+        title: "SOH",
+        bBox1: widget.bBox1?.soh.toString() ?? "No data",
+        bBox2: widget.bBox2?.soh.toString() ?? "No data",
+      ),
     ];
-    super.initState();
   }
 
   @override
@@ -192,7 +216,7 @@ class NavBatteryBoxCard extends StatelessWidget {
 class NavBatteryBoxDetails {
   final String title;
   final String bBox1;
-  final String? bBox2;
+  final String bBox2;
 
   NavBatteryBoxDetails({
     required this.title,

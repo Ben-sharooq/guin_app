@@ -1,4 +1,4 @@
-import 'dart:convert';
+
 
 class NavBoatDetailsModel {
   final BBox? bBox1;
@@ -104,7 +104,3 @@ class BBox {
   }
 }
 
-class Range {
-  static double range = 0.0;
-  static double speed = 0.0;
-}

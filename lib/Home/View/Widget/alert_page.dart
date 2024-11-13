@@ -20,7 +20,7 @@ class Scheduled extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Obx(() {
-          if (networkController.isLoading.value) {
+          if (networkController.isAlertLoading.value) {
             return const Center(child: CircularProgressIndicator());
           }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:guin/BoatDetails/Model/nav_details.dart';
+
+import 'package:guin/BoatDetails/View/DetailsScreen/NavDetailsScreen.dart';
 import 'package:guin/constants/responsive.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
