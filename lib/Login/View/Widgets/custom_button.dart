@@ -44,18 +44,14 @@ class LoginButton extends StatelessWidget {
         height: 50,
         minWidth: double.infinity,
         color: const Color.fromARGB(255, 4, 4, 4),
-        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+       
         onPressed: () {
           FocusScope.of(context).unfocus();
-          // Navigator.pushNamed(context, '/home');
+          
           if (formKey.currentState!.validate()) {
             onTap();
           }
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => DashBoard(),
-          //     ));
+          
         },
         child: const Text(
           "LOGIN",
@@ -131,16 +127,7 @@ class ResetPasswordButton extends StatelessWidget {
         color: primaryColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         onPressed: onPressed,
-        //     () {
-        //   FocusScope.of(context).unfocus();
-        //   if (formKey.currentState!.validate()) {
-        //     BlocProvider.of<LoginBloc>(context).add(
-        //       LoginPressedEvent(
-        //           username: emailController.text,
-        //           password: passwordController.text),
-        //     );
-        //   }
-        // },
+        
         child: const Text(
           "Reset Password",
           style: TextStyle(

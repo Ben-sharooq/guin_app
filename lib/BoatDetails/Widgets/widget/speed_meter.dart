@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import 'package:guin/BoatDetails/View/DetailsScreen/NavDetailsScreen.dart';
+import 'package:guin/Home/Controller/homeController.dart';
 import 'package:guin/constants/responsive.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
@@ -11,6 +14,7 @@ class SpeedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<NetworkController>();
     return Container(
       alignment: Alignment.bottomCenter,
       height: 200,
@@ -63,7 +67,7 @@ class SpeedWidget extends StatelessWidget {
                     GaugeAnnotation(
                         widget: Container(
                             padding: const EdgeInsets.only(top: 20),
-                            child: Text("${Range.speed} km",
+                            child: Text("${controller.boatDetails[0].range.speed} km",
                                 style: const TextStyle(
                                     fontSize: 19,
                                     fontWeight: FontWeight.bold))),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 import 'package:guin/Home/Controller/homeController.dart';
 import 'package:guin/constants/app_image.dart';
 import 'package:hexcolor/hexcolor.dart';

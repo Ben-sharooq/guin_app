@@ -1,36 +1,15 @@
-//library modal_progress_hud;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:guin/constants/constants.dart';
 
-///
-/// Wrap around any widget that makes an async call to show a modal progress
-/// indicator while the async call is in progress.
-///
-/// The progress indicator can be turned on or off using [inAsyncCall]
-///
-/// The progress indicator defaults to a [CircularProgressIndicator] but can be
-/// any kind of widget
-///
-/// The progress indicator can be positioned using [offset] otherwise it is
-/// centered
-///
-/// The modal barrier can be dismissed using [dismissible]
-///
-/// The color of the modal barrier can be set using [color]
-///
-/// The opacity of the modal barrier can be set using [opacity]
-///
-/// HUD=Heads Up Display
-///
 class LoadingScreen extends StatelessWidget {
-  final bool? inAsyncCall;
+  final bool inAsyncCall;
   final double opacity;
-  final Color? color;
+  final Color color;
   final Widget progressIndicator;
   final Offset? offset;
   final bool dismissible;
-  final Widget? child;
+  final Widget child;
 
   const LoadingScreen({
     Key? key,
@@ -41,34 +20,47 @@ class LoadingScreen extends StatelessWidget {
     this.offset,
     this.dismissible = false,
     required this.child,
-  })  : assert(child != null),
-        assert(inAsyncCall != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgetList = [];
-    widgetList.add(child!);
-    if (inAsyncCall!) {
-      Widget layOutProgressIndicator;
-      if (offset == null) {
-        layOutProgressIndicator = const LoadingIcon();
-      } else {
-        layOutProgressIndicator = Positioned(
-          left: offset?.dx,
-          top: offset?.dy,
-          child: progressIndicator,
-        );
-      }
-      final modal = [
-        Opacity(
-          opacity: opacity,
-          child: ModalBarrier(dismissible: dismissible, color: color),
+    List<Widget> widgetList = [child];
+
+    if (inAsyncCall) {
+      // Ensure proper layout for progressIndicator
+      Widget layOutProgressIndicator = offset == null
+          ? const Center(child:  LoadingIcon()) // Centered default loading icon
+          : Positioned(
+              left: offset!.dx,
+              top: offset!.dy,
+              child: SizedBox(
+                width: 50,
+                height:100 ,
+                child: progressIndicator,
+              ),
+            );
+
+      widgetList.addAll([
+        // Semi-transparent barrier
+        Positioned.fill( // Ensure full coverage of ModalBarrier
+          child: Opacity(
+            opacity: opacity,
+            child: ModalBarrier(
+              dismissible: dismissible,
+              color: color,
+            ),
+          ),
         ),
-        layOutProgressIndicator
-      ];
-      widgetList += modal;
+        if (offset == null)
+          layOutProgressIndicator
+        else
+          Align(
+            alignment: Alignment.center,
+            child: layOutProgressIndicator,
+          ),
+      ]);
     }
+
     return Stack(
       children: widgetList,
     );
@@ -80,18 +72,14 @@ class LoadingIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-        child: Align(
-      alignment: Alignment.center,
-      child: SizedBox(
-        child: SpinKitPulsingGrid(
-          color: Colors.amber,
-          //waveColor:AppColors.primaryColor ,
-          size: 50.0,
-        ),
-        // height: 30.0,
-        // width: 30.0,
+    return const SizedBox(
+      height: 100.0,
+      width: 100.0,
+      child: SpinKitPulsingGrid(
+        color: primaryColor,
+        size: 50.0,
       ),
-    ));
+    );
   }
 }
+

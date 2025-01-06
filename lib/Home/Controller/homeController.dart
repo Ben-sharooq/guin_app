@@ -2,11 +2,13 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:guin/Home/Controller/boatDetailsModel2.dart';
+import 'package:guin/AMC/model/amc_boat_model.dart';
+import 'package:guin/Co2_chart/model/graph_model.dart';
+
+import 'package:guin/Home/Controller/boat_details_model2.dart';
 import 'package:guin/Home/Model/alert_model.dart';
 import 'package:guin/Home/Model/all_boat_data.dart';
 import 'package:guin/Home/Model/co2model.dart';
-
 import 'package:guin/Home/Model/total_co2_trees.dart';
 import 'package:guin/Home/Model/weather_temp.dart';
 import 'package:guin/constants/app_text.dart';
@@ -21,15 +23,17 @@ class NetworkController extends GetxController {
   var selectedIndex = 0.obs;
   var toggleIndex = 0.obs;
   var weatherTemp = WeatherTemp().obs;
-  var co2ChartData = <Datum>[].obs;
-  var tressChartData = <Datum>[].obs;
-  var dieselChartData = <Datum>[].obs;
+  RxList<CarbonEmissionData> Co2chart = <CarbonEmissionData>[].obs;
+  var AmcBoats = <Boat>[].obs;
+  RxString selectedPeriod = 'Live'.obs;
 
   var isBoatdataLoading = true.obs; // General loading state
   var isco2dataLoading = true.obs; // Specific loading state for CO2/Trees data
   var isAlertLoading = true.obs;
   var isweatherLoading = true.obs;
   var isPeriodwiseLoading = false.obs;
+  var isAmcLoading = false.obs;
+  var isCo2chartLoding = true.obs;
   var errorMessage = ''.obs; // Error message holder
 
   @override
@@ -38,8 +42,7 @@ class NetworkController extends GetxController {
     getAllBoatData();
     getTotalCo2TressData();
     fetchAlerts();
-    
-    getDateWiseCo2TreesData(0);
+    fetchAmcBoats();
   }
 
   // Function to update selected index
@@ -212,6 +215,30 @@ class NetworkController extends GetxController {
     }
   }
 
+  Future<void> fetchAmcBoats() async {
+    const url = '${ConstantText.baseUrl}/api/v1/navalt_boats';
+    isAmcLoading.value = true;
+
+    try {
+      var response =
+          await _dio.get(url, options: Options(headers: getHeaders()));
+
+      if (response.statusCode == 200) {
+        var responseData = response.data['data'] as List;
+
+        // Parse the response into the `NewBoatData` model
+        AmcBoats.value =
+            responseData.map((item) => Boat.fromJson(item)).toList();
+      } else {
+        errorMessage.value = 'Failed to fetch data from new API';
+      }
+    } catch (e) {
+      errorMessage.value = 'Error fetching new API data: $e';
+    } finally {
+      isAmcLoading.value = false;
+    }
+  }
+
   // Fetch weather data based on latitude and longitude
   Future<WeatherTemp?> getWeatherTemp(double lat, double long) async {
     isweatherLoading.value = true;
@@ -233,29 +260,65 @@ class NetworkController extends GetxController {
     return null;
   }
 
-  // Fetch date-wise CO2 and Trees data
-  Future<TotalCo2TressPeriodWiseModel?> getDateWiseCo2TreesData(
-      int index) async {
-    isPeriodwiseLoading.value = true;
-    final url = "${ConstantText.baseUrl}/api/v1/total_carbonemission_graph"
-        "?input_param=${AppText.labels![index]}";
-
+  Future<void> Co2TreeData() async {
+    isCo2chartLoding(true);
+    const url = '${ConstantText.baseUrl}/api/v1/total_carbonemission_graph';
     try {
       var response =
-          await _dio.post(url, options: Options(headers: getHeaders()));
-
+          await _dio.get(url, options: Options(headers: getHeaders()));
       if (response.statusCode == 200) {
-        return TotalCo2TressPeriodWiseModel.fromJson(response.data);
+        var list = (response.data['data'] as List)
+            .map((json) => CarbonEmissionData.fromJson(json))
+            .toList();
+        Co2chart.value = list;
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error in getDateWiseCo2TreesData: $e');
-      }
+      errorMessage.value = 'Failed to fetch Co2 Data';
     } finally {
-      isPeriodwiseLoading.value = false;
+      isCo2chartLoding(false);
     }
-    return null;
   }
+
+  List<CarbonEmissionData> getLiveData() {
+    return Co2chart.where((item) =>
+            item.reportDatetime.isAfter(DateTime.now().subtract(Duration(hours: 1))))
+        .toList();
+  }
+
+  List<CarbonEmissionData> getDayData() {
+    return Co2chart.where((item) =>
+            item.reportDatetime.isAfter(DateTime.now().subtract(Duration(days: 1))))
+        .toList();
+  }
+
+  List<CarbonEmissionData> getMonthData() {
+    return Co2chart.where((item) =>
+            item.reportDatetime.isAfter(DateTime.now().subtract(Duration(days: 30))))
+        .toList();
+  }
+
+  List<CarbonEmissionData> getYearData() {
+    return Co2chart.where((item) =>
+            item.reportDatetime.isAfter(DateTime.now().subtract(Duration(days: 365))))
+        .toList();
+  }
+
+  List<CarbonEmissionData> getFilteredData() {
+    switch (selectedPeriod.value) {
+      case 'Live':
+        return getLiveData();
+      case 'Day':
+        return getDayData();
+      case 'Month':
+        return getMonthData();
+      case 'Year':
+        return getYearData();
+      default:
+        return getLiveData();
+    }
+  }
+
+
 
   // Helper method to get headers
   Map<String, String> getHeaders() {

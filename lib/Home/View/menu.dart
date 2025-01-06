@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:guin/AMC/view/amc_boats.dart';
+
+import 'package:guin/DatabasePage/view/databasepage.dart';
 
 import 'package:guin/Home/Model/menu_modal.dart';
-import 'package:guin/Home/View/our_vessels.dart';
 
 import 'package:guin/Login/View/login.dart';
 import 'package:guin/constants/responsive.dart';
+import 'package:guin/vesselList/view/vessel_details.page.dart';
 
 class Menu extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const Menu({super.key, required this.scaffoldKey});
+  const Menu({
+    super.key,
+    required this.scaffoldKey,
+  });
 
   @override
   _MenuState createState() => _MenuState();
@@ -20,10 +26,10 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
   List<MenuModel> menu = [
     MenuModel(icon: 'assets/svg/home.svg', title: "Dashboard"),
-    MenuModel(icon: 'assets/svg/home.svg', title: "Our vessels"),
+    MenuModel(icon: 'assets/svg/home.svg', title: "Vessels Details"),
     // MenuModel(icon: 'assets/svg/profile.svg', title: "Profile"),
-    // MenuModel(icon: 'assets/svg/setting.svg', title: "Settings"),
-    // MenuModel(icon: 'assets/svg/history.svg', title: "History"),
+    MenuModel(icon: 'assets/svg/setting.svg', title: "AMC"),
+    MenuModel(icon: 'assets/svg/history.svg', title: "Database"),
     MenuModel(icon: 'assets/svg/signout.svg', title: "Sign-out"),
   ];
 
@@ -62,18 +68,24 @@ class _MenuState extends State<Menu> {
                 ),
                 child: InkWell(
                   onTap: () {
-                    // menu.length==2
+                    menu.length == 4;
 
                     setState(() {
                       selected = i;
                     });
+
                     if (selected == 1) {
-                      Get.to(OurVesselPage(scaffoldKey: GlobalKey(),));
+                      Get.to(() => const VesselPage());
                     }
                     if (selected == 2) {
-                      Get.off(()=>const LoginPage());
+                      Get.to(() => AmcBoatListScreen());
                     }
-                    widget.scaffoldKey.currentState!.closeDrawer();
+                    if (selected == 3) {
+                      Get.to(() => DatabaseTableScreen());
+                    }
+                    if (selected == 4) {
+                      Get.off(() => const LoginPage());
+                    }
                   },
                   child: Row(
                     children: [

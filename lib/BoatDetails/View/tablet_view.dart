@@ -10,12 +10,12 @@ import 'package:guin/BoatDetails/Widgets/widget/boat_location.dart';
 import 'package:guin/BoatDetails/Widgets/widget/current_status.dart';
 import 'package:guin/BoatDetails/Widgets/widget/speed_meter.dart';
 import 'package:guin/BoatDetails/Widgets/widget/weather.dart';
-import 'package:guin/Home/Controller/boatDetailsModel2.dart';
+import 'package:guin/Home/Controller/boat_details_model2.dart';
 import 'package:guin/Home/Controller/homeController.dart';
 import 'package:guin/Home/Model/all_boat_data.dart';
 import 'package:guin/constants/app_image.dart';
 import 'package:guin/constants/app_text.dart';
-import 'package:guin/constants/constant_values.dart';
+
 import 'package:guin/constants/constants.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -84,7 +84,7 @@ class _TabletBodyState extends State<TabletBody> {
                                 child: CachedNetworkImage(
                                   width: 200,
                                   imageUrl:
-                                      "${ConstantText.baseUrl}${widget.navmodel.url}",
+                                      "${widget.navmodel.url}",
                                   placeholder: (context, url) => const Center(
                                       child: CircularProgressIndicator()),
                                   errorWidget: (context, url, error) =>
@@ -135,7 +135,7 @@ class _TabletBodyState extends State<TabletBody> {
                                           style: TextStyle(fontSize: 10),
                                         ),
                                         Text(
-                                          "${controller.boatDetails[0].range} km",
+                                          "${controller.boatDetails[0].range.range} km",
                                           style: const TextStyle(fontSize: 11),
                                         )
                                       ],
@@ -206,7 +206,7 @@ class _TabletBodyState extends State<TabletBody> {
                           )
                         : BatteryListData(
                             bBox1: controller.boatDetails[0].data[1],
-                            snapshotData: [],
+                            bBox2: controller.boatDetails[1].data[1], snapshotData: [],
                           ),
                   ),
                 ),
@@ -232,8 +232,7 @@ class _TabletBodyState extends State<TabletBody> {
                               Radius.circular(8.0),
                             ),
                           ),
-                          child: CurrentStatus(
-                          ),
+                          child: CurrentStatus(),
                         ),
                       )
                     : Container(
@@ -247,8 +246,7 @@ class _TabletBodyState extends State<TabletBody> {
                             Radius.circular(8.0),
                           ),
                         ),
-                        child: CurrentStatus(
-                        ),
+                        child: CurrentStatus(),
                       ),
                 const SizedBox(
                   width: 20,
@@ -311,13 +309,13 @@ class Co2TreesCard extends StatelessWidget {
       children: [
         Image.asset(
           imagurl,
-          height: 40,
-          width: 40,
+          height: 30,
+          width: 30,
         ),
         Padding(
           padding: const EdgeInsets.only(top: 10, bottom: 4),
           child: Text(
-            value.toString(),
+            value.toStringAsFixed(2),
             style: const TextStyle(
                 fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
           ),

@@ -8,8 +8,9 @@ class ConstantText {
   //battery box names
   static String batteryBox1 = "Port";
   static String batteryBox2 = "StarBoad";
-  
+
   static const String baseUrl = "http://103.119.241.252:5200";
+  
   // static const String baseUrl = "http://192.168.54.180:5200";
 }
 

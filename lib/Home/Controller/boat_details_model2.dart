@@ -5,11 +5,11 @@ class NavBoatDetailsModel2 {
   NavBoatDetailsModel2({required this.data, required this.range});
 
   factory NavBoatDetailsModel2.fromJson(Map<String, dynamic> json) {
-    var dataList = (json['data'] as List)
-        .map((item) => BatteryBox.fromJson(item))
+    var dataList = (json['data'] as List?)
+        ?.map((item) => BatteryBox.fromJson(item))
         .toList();
     return NavBoatDetailsModel2(
-      data: dataList,
+      data: dataList!,
       range: Range1.fromJson(json['range']),
     );
   }

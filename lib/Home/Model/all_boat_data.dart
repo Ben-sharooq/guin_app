@@ -92,7 +92,7 @@ class Data {
         "b_box_2_name": bBox2Name,
         "b_box_1_value": bBox1Value,
         "eb": eb,
-        "_1_name": bBox1Name,
+        "b_box_1_name": bBox1Name,
         "id": id,
         "b_box_2_value": bBox2Value,
         "total_run_hrs": totalRunHrs,

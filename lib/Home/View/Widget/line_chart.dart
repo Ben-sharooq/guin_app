@@ -13,8 +13,8 @@
 
 //   @override
 //   Widget build(BuildContext context) {
-//    final  networkController = Get.find<NetworkController>();
-   
+//     final networkController = Get.find<NetworkController>();
+//     final int selectIndex;
 
 //     return CustomCard(
 //       child: GetBuilder<ChartController>(
@@ -59,8 +59,8 @@
 //                   primaryYAxis: const NumericAxis(
 //                       axisBorderType: AxisBorderType.withoutTopAndBottom,
 //                       labelStyle: TextStyle(fontSize: 13)),
-//                   primaryXAxis: CategoryAxis(
-//                       isVisible: controller.toggleIndex.value > 1),
+//                   primaryXAxis:
+//                       CategoryAxis(isVisible: controller.toggleIndex.value > 1),
 //                   series: <CartesianSeries>[
 //                     (controller.toggleIndex.value <= 1
 //                         ? AreaSeries<Co2TressChartData, dynamic>(
@@ -134,7 +134,7 @@
 //   final double y;
 // }
 
-//  class ChartController extends GetxController {
+// class ChartController extends GetxController {
 //   final networkService = Get.find<NetworkController>();
 
 //   var co2ChartData = <Co2TressChartData>[].obs;
@@ -152,14 +152,11 @@
 
 //   Future<void> fetchChartData() async {
 //     try {
-    
 //       var data = await networkService.getDateWiseCo2TreesData(0);
 //       co2ChartData.assignAll(data!.co2ChartData);
 //       tressChartData.assignAll(data.tressChartData);
 //       dieselChartData.assignAll(data.dieselChartData);
-//     } catch (e) {
-     
-//     }
+//     } catch (e) {}
 //   }
 
 //   void changePeriod(int index) {

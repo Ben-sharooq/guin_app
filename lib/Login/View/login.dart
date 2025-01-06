@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final loginController = Get.put(LoginController());
-    return WillPopScope(
+    return WillPopScope (
         onWillPop: () {
           if (Platform.isAndroid) {
             SystemNavigator.pop();
@@ -142,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                                                             ? Icons
                                                                 .visibility_off
                                                             : Icons.visibility,
-                                                        color: Colors.amber,
+                                                        color: Colors.grey[600],
                                                       ),
                                                     ),
                                                   ),
@@ -275,7 +275,7 @@ class _LoginPageState extends State<LoginPage> {
                                                                     : Icons
                                                                         .visibility,
                                                                 color: Colors
-                                                                    .amber,
+                                                                    .grey[600],
                                                               ),
                                                             ),
                                                           ),

@@ -35,7 +35,7 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   flutter_svg: ^2.0.5
-  fl_chart: ^0.62.0
+  fl_chart:
   http: ^1.0.0
   flutter_bloc: ^8.1.2
   fluro: ^2.0.5
@@ -55,6 +55,8 @@ dependencies:
   get: ^4.6.6
   dio: ^5.7.0
   shimmer: ^3.0.0
+  getwidget: ^5.0.0
+  pretty_animated_buttons: ^0.0.2
 
   
 

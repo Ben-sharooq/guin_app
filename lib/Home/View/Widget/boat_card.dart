@@ -78,7 +78,7 @@ class BoatCard extends StatelessWidget {
               ),
             ),
             CachedNetworkImage(
-              imageUrl: modelData.url ?? '',
+              imageUrl: modelData.url?? '',
               fit: BoxFit.cover,
               height: 60,
               width: 100,
@@ -131,8 +131,8 @@ class BoatCardValue extends StatelessWidget {
       children: [
         Image.asset(
           imagurl ?? '', // Ensure imagurl is not null
-          height: 16,
-          width: 20,
+          height: 14,
+          width: 25,
         ),
         Padding(
           padding: const EdgeInsets.only(top: 6, bottom: 4),

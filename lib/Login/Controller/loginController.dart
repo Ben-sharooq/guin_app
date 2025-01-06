@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 import 'package:guin/Home/Controller/homeController.dart';
 
 import 'package:guin/Home/View/dashboard.dart';
-import 'package:guin/Login/Model/loginResponse.dart';
+
+import 'package:guin/Login/Model/login_Response.dart';
 import 'package:guin/constants/constant_values.dart';
 
 class LoginController extends GetxController {

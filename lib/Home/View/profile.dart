@@ -18,42 +18,50 @@ class Profile extends StatelessWidget {
         ),
         color: cardBackgroundColor,
       ),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 50,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 50,
+            ),
+            Image.asset(
+              "assets/images/avatar.png",
+              height: 100,
+              width: 100,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            const Text(
+              "Navalt",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 2,
+            ),
+            Text(
+              "Oceans, Electrified",
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).primaryColor,
               ),
-              Image.asset(
-                "assets/images/avatar.png",
-                height: 100,
-                width: 100,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              const Text(
-                "Navalt",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(
-                height: 2,
-              ),
-              Text(
-                "Oceans, Electrified",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              SizedBox(
-                height: Responsive.isMobile(context) ? 20 : 40,
-              ),
-              Scheduled()
-            ],
-          ),
+            ),
+            SizedBox(
+              height: Responsive.isMobile(context) ? 20 : 40,
+              
+            ),
+            const SizedBox(height: 20),
+            const Text(
+          "Alerts",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+             Expanded(
+               child: SingleChildScrollView(
+                child: Scheduled()),
+             )
+           
+          ],
         ),
       ),
     );

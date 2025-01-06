@@ -1,10 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:guin/Home/Controller/boatDetailsModel2.dart';
+
+import 'package:guin/Home/Controller/boat_details_model2.dart';
 
 import 'package:guin/constants/constants.dart';
 import 'package:guin/constants/responsive.dart';
@@ -30,35 +30,32 @@ class BatteryListData extends StatefulWidget {
 class _BatteryListDataState extends State<BatteryListData> {
   List<NavBatteryBoxDetails> navBatteryBoxDetails = <NavBatteryBoxDetails>[];
 
- 
   @override
   void initState() {
     super.initState();
 
-    // Print the values of bBox1 and bBox2 to the console
     if (kDebugMode) {
-      print('bBox1: ${widget.bBox1 ?? "No data"}');
+      print('bBox1: ${widget.bBox1}');
+      print('bBox2: ${widget.bBox2}');
     }
-    if (kDebugMode) {
-      print('bBox2: ${widget.bBox2 ?? "No data"}');
-    }
-
     // Initialize navBatteryBoxDetails with data from bBox1 and bBox2, with fallback values if null.
     navBatteryBoxDetails = <NavBatteryBoxDetails>[
       NavBatteryBoxDetails(
         title: "",
-        bBox1: widget.bBox1?.toString() ?? "No data",  // Handle null for bBox1
-        bBox2: widget.bBox2?.toString() ?? "No data",  // Handle null for bBox2
+        bBox1: widget.bBox1?.toString() ?? "No data", // Handle null for bBox1
+        bBox2: widget.bBox2?.toString() ?? "No data", // Handle null for bBox2
       ),
       NavBatteryBoxDetails(
         title: "Pack current",
-        bBox1: widget.bBox1?.packCurrent.toString() ?? "N/A",  // Fallback for packCurrent
-        bBox2: widget.bBox2?.packCurrent.toString() ?? "N/A",  // Fallback for packCurrent
+        bBox1: widget.bBox1?.packCurrent.toString() ??
+            "N/A", // Fallback for packCurrent
+        bBox2: widget.bBox2?.packCurrent.toString() ??
+            "N/A", // Fallback for packCurrent
       ),
       NavBatteryBoxDetails(
         title: "SOC",
-        bBox1: widget.bBox1?.soc.toString() ?? "No data",  // Handle null for SOC
-        bBox2: widget.bBox2?.soc.toString() ?? "No data",  // Handle null for SOC
+        bBox1: widget.bBox1?.soc.toString() ?? "No data", // Handle null for SOC
+        bBox2: widget.bBox2?.soc.toString() ?? "No data", // Handle null for SOC
       ),
       NavBatteryBoxDetails(
         title: "Max cell voltage",
@@ -130,15 +127,19 @@ class _BatteryListDataState extends State<BatteryListData> {
           Radius.circular(8.0),
         ),
       ),
-      child: ListView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        // scrollDirection: Axis.vertical,
-        itemCount: navBatteryBoxDetails.length,
-        itemBuilder: (context, index) {
-          return NavBatteryBoxCard(
-            navBatteryBoxDetails: navBatteryBoxDetails[index],
-          );
-        },
+      child: Column(
+        children:[ Expanded(
+          child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            // scrollDirection: Axis.vertical,
+            itemCount: navBatteryBoxDetails.length,
+            itemBuilder: (context, index) {
+              return NavBatteryBoxCard(
+                navBatteryBoxDetails: navBatteryBoxDetails[index],
+              );
+            },
+          ),
+        ),],
       ),
     );
   }
@@ -168,45 +169,51 @@ class NavBatteryBoxCard extends StatelessWidget {
             : Responsive.isDesktop(context)
                 ? const EdgeInsets.all(7)
                 : const EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              navBatteryBoxDetails.title,
-              style: TextStyle(
-                  fontSize: Responsive.isTablet(context) ? 16 : 15,
-                  fontWeight: FontWeight.w400),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  navBatteryBoxDetails.bBox1.toString(),
-                  style: TextStyle(
-                      color: const Color.fromARGB(255, 115, 115, 243),
-                      fontSize: Responsive.isTablet(context) ? 16 : 15,
-                      fontWeight: FontWeight.w400),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                Container(
-                  padding: Responsive.isDesktop(context)
-                      ? const EdgeInsets.all(6)
-                      : const EdgeInsets.all(7),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: const Color.fromRGBO(3, 161, 104, 0.1)),
-                  child: Text(
-                    navBatteryBoxDetails.bBox2.toString(),
+        child: Flexible(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                navBatteryBoxDetails.title,
+                style: TextStyle(
+                    fontSize: Responsive.isTablet(context) ? 16 : 15,
+                    fontWeight: FontWeight.w400),
+              ),
+              SizedBox(
+                width: 2,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    navBatteryBoxDetails.bBox1.toString(),
                     style: TextStyle(
+                        color: const Color.fromARGB(255, 115, 115, 243),
                         fontSize: Responsive.isTablet(context) ? 16 : 15,
                         fontWeight: FontWeight.w400),
                   ),
-                )
-              ],
-            )
-          ],
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  
+                  Container(
+                    padding: Responsive.isDesktop(context)
+                        ? const EdgeInsets.all(6)
+                        : const EdgeInsets.all(7),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: const Color.fromRGBO(3, 161, 104, 0.1)),
+                    child: Text(
+                      navBatteryBoxDetails.bBox2.toString(),
+                      style: TextStyle(
+                          fontSize: Responsive.isTablet(context) ? 16 : 15,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

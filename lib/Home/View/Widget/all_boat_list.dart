@@ -61,7 +61,7 @@ class AllBoatListWidget extends StatelessWidget {
                           children: [
                             CachedNetworkImage(
                               imageUrl: navModelData[index]?.data?.url ?? '',
-                              // "${ConstantText.baseUrl}${navModelData[index]!.data!.url!}",
+                             // "${ConstantText.baseUrl}${navModelData[index]!.data!.url!}",
                               height: 50,
                               width: 80,
                               placeholder: (context, url) => const Center(

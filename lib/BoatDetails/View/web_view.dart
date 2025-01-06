@@ -1,21 +1,21 @@
+import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 
 import 'package:guin/BoatDetails/Widgets/widget/battery_box.dart';
 import 'package:guin/BoatDetails/Widgets/widget/boat_location.dart';
 import 'package:guin/BoatDetails/Widgets/widget/current_status.dart';
 import 'package:guin/BoatDetails/Widgets/widget/speed_meter.dart';
 import 'package:guin/BoatDetails/Widgets/widget/weather.dart';
-import 'package:guin/Home/Controller/boatDetailsModel2.dart';
+import 'package:guin/Home/Controller/boat_details_model2.dart';
 import 'package:guin/Home/Controller/homeController.dart';
 import 'package:guin/Home/Model/all_boat_data.dart';
 import 'package:guin/constants/app_image.dart';
 import 'package:guin/constants/app_text.dart';
+
 import 'package:guin/constants/constants.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -42,10 +42,15 @@ class _DesktopBodyState extends State<DesktopBody> {
   Widget build(BuildContext context) {
     LatLng boatLatLng = LatLng(widget.latitude, widget.longitude);
     final controller = Get.find<NetworkController>();
-    return Scaffold(
-      body: Row(
-        children: [
-          // First column: Boat info and status
+    return WillPopScope(onWillPop: () async {
+      return false;
+    },
+
+   child:  Scaffold(
+      body: 
+      
+       Row(
+        children: [   
           Expanded(
             flex: 4,
             child: Padding(
@@ -65,18 +70,16 @@ class _DesktopBodyState extends State<DesktopBody> {
                       ),
                     ),
                     const SizedBox(height: 15),
-                    // Expanded(
-                    //    child:
-                    //    // CachedNetworkImage(
-                    //   //   width: 250,
-                    //   //   imageUrl:
-                    //   //       "${ConstantText.baseUrl}${widget.navmodel.url}",
-                    //   //   placeholder: (context, url) =>
-                    //   //       const CircularProgressIndicator(),
-                    //   //   errorWidget: (context, url, error) =>
-                    //   //       const Icon(Icons.error),
-                    //   // ),
-                    // ),
+                    Expanded(
+                      child: CachedNetworkImage(
+                        width: 250,
+                        imageUrl: "${widget.navmodel.url}",
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
                     const SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -111,7 +114,8 @@ class _DesktopBodyState extends State<DesktopBody> {
                             children: [
                               const Text("Range",
                                   style: TextStyle(fontSize: 10)),
-                              Text("${controller.boatDetails[0].range} km",
+                              Text(
+                                  "${controller.boatDetails[0].range.range} km",
                                   style: const TextStyle(fontSize: 11)),
                             ],
                           ),
@@ -123,6 +127,7 @@ class _DesktopBodyState extends State<DesktopBody> {
                           lineWidth: 4.0,
                           percent: 0.30,
                           center: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text("Cost/kw", style: TextStyle(fontSize: 10)),
                               Text("0.3", style: TextStyle(fontSize: 11)),
@@ -180,7 +185,7 @@ class _DesktopBodyState extends State<DesktopBody> {
           ),
         ],
       ),
-    );
+    ),);
   }
 
   // Helper: Current Status Widget
@@ -194,8 +199,7 @@ class _DesktopBodyState extends State<DesktopBody> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(5.0),
-        child: CurrentStatus(
-        ),
+        child: CurrentStatus(),
       ),
     );
   }
@@ -248,7 +252,7 @@ class Co2TreesCard extends StatelessWidget {
         Image.asset(imagurl, height: 40, width: 40),
         const SizedBox(height: 10),
         Text(
-          value.toString(),
+          value.toStringAsFixed(2),
           style: const TextStyle(
             fontSize: 14,
             color: Colors.white,
